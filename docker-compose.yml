@@ -1,0 +1,22 @@
+# ~/roarm_docker/docker-compose.yml
+
+services:
+  roarm:
+    build:
+      context: .
+      dockerfile: Dockerfile.vnc
+    image: roarm-ros2-vnc:latest
+    container_name: roarm_dev
+    environment:
+      - ROARM_MODEL=roarm_m2
+      - ROS_DOMAIN_ID=0
+      - DISPLAY=:99
+      - LIBGL_ALWAYS_SOFTWARE=1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "5900:5900"
+    volumes:
+      - ./workspace:/home/ws/roarm_ws/src/custom
+    stdin_open: true
+    tty: true

@@ -1,0 +1,22 @@
+FROM roarm-ros2:latest
+
+# Headless GUI stack for macOS: Docker Desktop can't forward GLX (indirect
+# rendering to XQuartz over the network doesn't support the GL contexts
+# rviz2/OGRE need — confirmed via "Unable to create a suitable GLXContext").
+# Instead we run a virtual display + software GL renderer inside the
+# container and expose it over VNC, which macOS views natively via Screen
+# Sharing (Finder > Go > Connect to Server > vnc://localhost:5900).
+RUN apt-get update && apt-get install -y \
+    xvfb \
+    x11vnc \
+    fluxbox \
+    mesa-utils \
+    libgl1-mesa-dri \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV LIBGL_ALWAYS_SOFTWARE=1
+
+COPY start-vnc.sh /usr/local/bin/start-vnc.sh
+RUN chmod +x /usr/local/bin/start-vnc.sh
+
+CMD ["/usr/local/bin/start-vnc.sh"]

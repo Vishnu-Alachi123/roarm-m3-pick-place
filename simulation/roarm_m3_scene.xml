@@ -1,0 +1,70 @@
+<mujoco model="roarm_m3_scene">
+  <compiler angle="radian"/>
+
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <visual>
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.6 0.6 0.6"/>
+  </visual>
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link1" content_type="model/stl" file="meshes/link1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link2" content_type="model/stl" file="meshes/link2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link3" content_type="model/stl" file="meshes/link3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link4" content_type="model/stl" file="meshes/link4.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link5" content_type="model/stl" file="meshes/link5.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gripper_link" content_type="model/stl" file="meshes/gripper_link.stl" scale="0.001 0.001 0.001"/>
+    <texture type="skybox" builtin="gradient" rgb1="0.55 0.65 0.8" rgb2="1 1 1" width="256" height="256"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.2 0.25 0.3" rgb2="0.25 0.3 0.35" width="512" height="512"/>
+    <material name="grid" texture="grid" texrepeat="6 6" reflectance="0.1"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.3 0.3 1.2" dir="-0.3 -0.3 -1" directional="true" diffuse="0.8 0.8 0.8"/>
+    <light pos="-0.3 -0.3 1.2" dir="0.3 0.3 -1" directional="true" diffuse="0.4 0.4 0.4"/>
+    <geom name="floor" type="plane" size="1 1 0.01" material="grid"/>
+
+    <geom pos="0 0 0.0701" quat="1 0 0 0" type="mesh" rgba="0.75 0.75 0.78 1" mesh="base_link"/>
+    <body name="link1" pos="0 0 0.0701">
+      <inertial pos="0 0 0.037" quat="0.5 0.5 -0.5 0.5" mass="0.0729177" diaginertia="5.01023e-05 4.68465e-05 3.32107e-05"/>
+      <joint name="base_link_to_link1" pos="0 0 0" axis="0 0 1" range="-3.1416 3.1416"/>
+      <geom type="mesh" rgba="0.75 0.75 0.78 1" mesh="link1"/>
+      <body name="link2" pos="0 0 0.051959" quat="0.499998 -0.5 -0.5 -0.500002">
+        <inertial pos="0.119 0.012247 -0.0001" quat="0.5 0.5 0.5 0.5" mass="0.0703216" diaginertia="0.000423091 0.000404557 5.46501e-05"/>
+        <joint name="link1_to_link2" pos="0 0 0" axis="0 0 1" range="-1.5708 1.5708"/>
+        <geom type="mesh" rgba="0.75 0.75 0.78 1" mesh="link2"/>
+        <body name="link3" pos="0.236815 0.030002 0" quat="0.707105 0 0 0.707108">
+          <inertial pos="-0.0015 -0.0765 0.00505" quat="0.707107 0.707107 0 0" mass="0.021608" diaginertia="6.37699e-05 6.28965e-05 3.67026e-06"/>
+          <joint name="link2_to_link3" pos="0 0 0" axis="0 0 1" range="-1 2.95"/>
+          <geom type="mesh" rgba="0.75 0.75 0.78 1" mesh="link3"/>
+          <body name="link4" pos="0 -0.144586 0">
+            <inertial pos="-0.0015 -0.022 -0.00075" quat="0.5 0.5 -0.5 0.5" mass="0.0099933" diaginertia="5.60238e-06 4.53979e-06 3.78103e-06"/>
+            <joint name="link3_to_link4" pos="0 0 0" axis="0 0 1" range="-1.5708 1.5708"/>
+            <geom type="mesh" rgba="0.75 0.75 0.78 1" mesh="link4"/>
+            <body name="link5" pos="0.015147 -0.053653 0" quat="0.499998 0.5 0.5 -0.500002">
+              <inertial pos="-0.0078 0 0.0595" quat="0.707107 0 0 0.707107" mass="0.0153928" diaginertia="2.14427e-05 2.02869e-05 4.39495e-06"/>
+              <joint name="link4_to_link5" pos="0 0 0" axis="0 0 1" range="-3.1416 3.1416"/>
+              <geom type="mesh" rgba="0.75 0.75 0.78 1" mesh="link5"/>
+              <body name="gripper_link" pos="0 0.018821 0.052035" quat="0.499998 -0.5 -0.5 -0.500002">
+                <inertial pos="0.027 0.0027 -0.018935" quat="0.5 0.5 0.5 0.5" mass="0.0028708" diaginertia="1.82071e-06 1.60231e-06 5.23216e-07"/>
+                <joint name="link5_to_gripper_link" pos="0 0 0" axis="0 0 1" range="0 1.5"/>
+                <geom type="mesh" rgba="0.75 0.75 0.78 1" mesh="gripper_link"/>
+                <site name="hand_tcp" pos="0 -0.011 0.0774" size="0.005"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="base_act" joint="base_link_to_link1" kp="15" ctrlrange="-3.1416 3.1416"/>
+    <position name="shoulder_act" joint="link1_to_link2" kp="15" ctrlrange="-1.5708 1.5708"/>
+    <position name="elbow_act" joint="link2_to_link3" kp="15" ctrlrange="-1 2.95"/>
+    <position name="wrist_act" joint="link3_to_link4" kp="10" ctrlrange="-1.5708 1.5708"/>
+    <position name="roll_act" joint="link4_to_link5" kp="5" ctrlrange="-3.1416 3.1416"/>
+    <position name="gripper_act" joint="link5_to_gripper_link" kp="5" ctrlrange="0 1.5"/>
+  </actuator>
+</mujoco>

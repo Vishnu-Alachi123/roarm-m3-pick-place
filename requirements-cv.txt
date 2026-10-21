@@ -1,0 +1,9 @@
+# CV object detection dependencies
+# Install on your HOST machine (not inside Docker) since webcam access is needed
+#
+# Install with:
+#   pip install -r requirements-cv.txt
+
+opencv-python==4.10.0.84
+ultralytics==8.3.0
+numpy>=1.24.0
